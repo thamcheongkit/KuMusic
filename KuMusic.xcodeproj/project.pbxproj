@@ -15,6 +15,10 @@
 		4313124E1FCD55D900336776 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4313124C1FCD55D900336776 /* LaunchScreen.storyboard */; };
 		431312591FCD55D900336776 /* KuMusicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431312581FCD55D900336776 /* KuMusicTests.swift */; };
 		431312641FCD55DA00336776 /* KuMusicUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 431312631FCD55DA00336776 /* KuMusicUITests.swift */; };
+		4324BBEB1FDD3B1100442BB9 /* SongsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4324BBEA1FDD3B1100442BB9 /* SongsTableViewController.swift */; };
+		4378F32B1FCD7805005E3121 /* KuMusic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4378F32A1FCD7805005E3121 /* KuMusic.swift */; };
+		4386C6741FDE1BBF00FAD81D /* LibraryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4386C6731FDE1BBF00FAD81D /* LibraryTableViewController.swift */; };
+		4386C6761FDE392600FAD81D /* ClipartListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4386C6751FDE392600FAD81D /* ClipartListTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +53,10 @@
 		4313125F1FCD55D900336776 /* KuMusicUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KuMusicUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		431312631FCD55DA00336776 /* KuMusicUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuMusicUITests.swift; sourceTree = "<group>"; };
 		431312651FCD55DA00336776 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4324BBEA1FDD3B1100442BB9 /* SongsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongsTableViewController.swift; sourceTree = "<group>"; };
+		4378F32A1FCD7805005E3121 /* KuMusic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KuMusic.swift; sourceTree = "<group>"; };
+		4386C6731FDE1BBF00FAD81D /* LibraryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryTableViewController.swift; sourceTree = "<group>"; };
+		4386C6751FDE392600FAD81D /* ClipartListTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipartListTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,13 +107,11 @@
 		431312401FCD55D900336776 /* KuMusic */ = {
 			isa = PBXGroup;
 			children = (
-				431312411FCD55D900336776 /* AppDelegate.swift */,
-				431312431FCD55D900336776 /* FirstViewController.swift */,
-				431312451FCD55D900336776 /* SecondViewController.swift */,
 				431312471FCD55D900336776 /* Main.storyboard */,
-				4313124A1FCD55D900336776 /* Assets.xcassets */,
-				4313124C1FCD55D900336776 /* LaunchScreen.storyboard */,
+				4378F32A1FCD7805005E3121 /* KuMusic.swift */,
+				431312721FCD561600336776 /* Controller */,
 				4313124F1FCD55D900336776 /* Info.plist */,
+				431312711FCD560B00336776 /* Supporting Files */,
 			);
 			path = KuMusic;
 			sourceTree = "<group>";
@@ -126,6 +132,28 @@
 				431312651FCD55DA00336776 /* Info.plist */,
 			);
 			path = KuMusicUITests;
+			sourceTree = "<group>";
+		};
+		431312711FCD560B00336776 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				431312411FCD55D900336776 /* AppDelegate.swift */,
+				4313124A1FCD55D900336776 /* Assets.xcassets */,
+				4313124C1FCD55D900336776 /* LaunchScreen.storyboard */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		431312721FCD561600336776 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				431312431FCD55D900336776 /* FirstViewController.swift */,
+				431312451FCD55D900336776 /* SecondViewController.swift */,
+				4386C6731FDE1BBF00FAD81D /* LibraryTableViewController.swift */,
+				4324BBEA1FDD3B1100442BB9 /* SongsTableViewController.swift */,
+				4386C6751FDE392600FAD81D /* ClipartListTableViewController.swift */,
+			);
+			path = Controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,8 +290,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4386C6761FDE392600FAD81D /* ClipartListTableViewController.swift in Sources */,
+				4386C6741FDE1BBF00FAD81D /* LibraryTableViewController.swift in Sources */,
 				431312461FCD55D900336776 /* SecondViewController.swift in Sources */,
 				431312421FCD55D900336776 /* AppDelegate.swift in Sources */,
+				4324BBEB1FDD3B1100442BB9 /* SongsTableViewController.swift in Sources */,
+				4378F32B1FCD7805005E3121 /* KuMusic.swift in Sources */,
 				431312441FCD55D900336776 /* FirstViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
