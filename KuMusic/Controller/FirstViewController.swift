@@ -18,6 +18,7 @@ class FirstViewController: UIViewController {
     @IBAction func playPauseButton(_ sender: Any) { playOrPause() }
     @IBAction func shuffleButton(_ sender: Any) { cycleShuffleMode() }
     @IBAction func repeatButton(_ sender: Any) { cycleRepeatMode() }
+    @IBAction func slider(_ sender: UISlider) { }
     
     @IBOutlet weak var mediaInfo: UILabel!
     @IBOutlet weak var shuffleLabel: UILabel!
@@ -29,6 +30,23 @@ class FirstViewController: UIViewController {
         displayNowPlayingItem()
         
         addSongsToQueue()
+        
+        myMusicPlayer.beginGeneratingPlaybackNotifications()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.nowPlayingChanged(notification:)),
+            name: .MPMusicPlayerControllerNowPlayingItemDidChange,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.playbackStateChanged(notification:)),
+            name: .MPMusicPlayerControllerPlaybackStateDidChange,
+            object: nil
+        )
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,19 +54,25 @@ class FirstViewController: UIViewController {
         // Dispose of any resources that can be recreated.
         myMusicPlayer.beginGeneratingPlaybackNotifications()
     }
-
+    
 }
 
 extension FirstViewController {
+    
+    @objc func nowPlayingChanged(notification: NSNotification) {
+        NSLog("now playing did changed!")
+        displayNowPlayingItem()
+    }
+    
+    @objc func playbackStateChanged(notification: NSNotification) {
+        NSLog("playback state changed notification")
+        repeatLabel.text = String(myMusicPlayer.repeatMode.rawValue)
+        shuffleLabel.text = String(myMusicPlayer.shuffleMode.rawValue)
+    }
+    
     func addSongsToQueue() {
         // Instantiate a new music player
         myMusicPlayer.setQueue(with: MPMediaQuery.songs())
-        
-//        if let songs = MPMediaQuery.songs().items {
-//            for song in songs {
-//                print(song.title)
-//            }
-//        }
     }
     
     func play() {

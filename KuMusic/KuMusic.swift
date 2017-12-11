@@ -21,7 +21,7 @@ class KuMusic {
 //            }
 //        }
     }
-    
+
     enum MediaType {
         case artist
         case album
@@ -65,6 +65,7 @@ class KuMusic {
         let songsByAlbum = songsByAlbums?.filter({ $0.items[0].albumTitle == album })
         return songsByAlbum?[0].items
     }
+    
     
 
 //    func queryArtists() -> [MPMediaItem] {
