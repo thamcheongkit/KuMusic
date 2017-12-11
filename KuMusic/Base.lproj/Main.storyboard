@@ -48,8 +48,11 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3qf-A5-ax9">
                                 <rect key="frame" x="71" y="284" width="234" height="110.5"/>
                                 <subviews>
-                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="hcA-93-Czt">
+                                    <slider opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="hcA-93-Czt">
                                         <rect key="frame" x="-2" y="0.0" width="238" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="234" id="bIv-bS-TIA"/>
+                                        </constraints>
                                         <connections>
                                             <action selector="slider:" destination="9pv-A4-QxB" eventType="valueChanged" id="wpw-zo-Lbo"/>
                                         </connections>
@@ -119,6 +122,7 @@
                         <outlet property="mediaInfo" destination="W8E-xg-RsT" id="csI-60-swz"/>
                         <outlet property="repeatLabel" destination="3gL-K4-WZd" id="bss-U8-68L"/>
                         <outlet property="shuffleLabel" destination="5QK-SC-ZhA" id="uAV-aQ-uGw"/>
+                        <outlet property="slider" destination="hcA-93-Czt" id="ZJI-4v-z0P"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>

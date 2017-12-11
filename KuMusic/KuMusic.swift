@@ -15,11 +15,6 @@ class KuMusic {
     func addSongsToQueue() {
         // Instantiate a new music player
         musicPlayer.setQueue(with: MPMediaQuery.songs())
-//        if let songs = MPMediaQuery.songs().items {
-//            for song in songs {
-//                print(song.title)
-//            }
-//        }
     }
 
     enum MediaType {

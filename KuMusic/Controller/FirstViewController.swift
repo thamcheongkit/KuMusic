@@ -18,11 +18,11 @@ class FirstViewController: UIViewController {
     @IBAction func playPauseButton(_ sender: Any) { playOrPause() }
     @IBAction func shuffleButton(_ sender: Any) { cycleShuffleMode() }
     @IBAction func repeatButton(_ sender: Any) { cycleRepeatMode() }
-    @IBAction func slider(_ sender: UISlider) { }
     
     @IBOutlet weak var mediaInfo: UILabel!
     @IBOutlet weak var shuffleLabel: UILabel!
     @IBOutlet weak var repeatLabel: UILabel!
+    @IBOutlet weak var slider: UISlider!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,23 +30,8 @@ class FirstViewController: UIViewController {
         displayNowPlayingItem()
         
         addSongsToQueue()
-        
         myMusicPlayer.beginGeneratingPlaybackNotifications()
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(self.nowPlayingChanged(notification:)),
-            name: .MPMusicPlayerControllerNowPlayingItemDidChange,
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(self.playbackStateChanged(notification:)),
-            name: .MPMusicPlayerControllerPlaybackStateDidChange,
-            object: nil
-        )
-        
+        setupNotifications()
     }
 
     override func didReceiveMemoryWarning() {
@@ -68,6 +53,45 @@ extension FirstViewController {
         NSLog("playback state changed notification")
         repeatLabel.text = String(myMusicPlayer.repeatMode.rawValue)
         shuffleLabel.text = String(myMusicPlayer.shuffleMode.rawValue)
+        
+        updateSliderTimer()
+    }
+    
+    func setupNotifications() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.nowPlayingChanged(notification:)),
+            name: .MPMusicPlayerControllerNowPlayingItemDidChange,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.playbackStateChanged(notification:)),
+            name: .MPMusicPlayerControllerPlaybackStateDidChange,
+            object: nil
+        )
+    }
+    
+    
+    func updateSliderTimer() {
+        let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in self?.updateSlider() }
+        
+        switch myMusicPlayer.playbackState {
+        case .playing:
+            return
+        default:
+            NSLog("invalidate timer")
+            timer.invalidate()
+        }
+    }
+    
+    func updateSlider() {
+        slider.value = Float(myMusicPlayer.currentPlaybackTime)
+        slider.minimumValue = 0
+        slider.maximumValue = Float((myMusicPlayer.nowPlayingItem?.playbackDuration)!)
+        NSLog(String(slider.maximumValue))
+        NSLog(String(slider.value))
     }
     
     func addSongsToQueue() {
