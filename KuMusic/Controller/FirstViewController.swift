@@ -168,6 +168,9 @@ extension FirstViewController {
         }
         
         mediaInfo.text = myMusicPlayer.nowPlayingItem?.title
+        
+        repeatLabel.text = String(myMusicPlayer.repeatMode.rawValue)
+        shuffleLabel.text = String(myMusicPlayer.shuffleMode.rawValue)
     }
 
 }
