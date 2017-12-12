@@ -23,15 +23,16 @@ class FirstViewController: UIViewController {
     @IBOutlet weak var shuffleLabel: UILabel!
     @IBOutlet weak var repeatLabel: UILabel!
     @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var playPauseButton: UIButton!
+    @IBOutlet weak var albumArt: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        displayNowPlayingItem()
-        
         addSongsToQueue()
-        myMusicPlayer.beginGeneratingPlaybackNotifications()
         setupNotifications()
+        updatePlayPauseButton()
+        displayNowPlayingItem()
     }
 
     override func didReceiveMemoryWarning() {
@@ -53,7 +54,7 @@ extension FirstViewController {
         NSLog("playback state changed notification")
         repeatLabel.text = String(myMusicPlayer.repeatMode.rawValue)
         shuffleLabel.text = String(myMusicPlayer.shuffleMode.rawValue)
-        
+        updatePlayPauseButton()
         updateSliderTimer()
     }
     
@@ -73,9 +74,10 @@ extension FirstViewController {
         )
     }
     
-    
     func updateSliderTimer() {
         let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in self?.updateSlider() }
+        timer.tolerance = 10.0
+        
         
         switch myMusicPlayer.playbackState {
         case .playing:
@@ -90,8 +92,15 @@ extension FirstViewController {
         slider.value = Float(myMusicPlayer.currentPlaybackTime)
         slider.minimumValue = 0
         slider.maximumValue = Float((myMusicPlayer.nowPlayingItem?.playbackDuration)!)
-        NSLog(String(slider.maximumValue))
-        NSLog(String(slider.value))
+    }
+    
+    func updatePlayPauseButton() {
+        switch myMusicPlayer.playbackState {
+        case .playing:
+            playPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+        default:
+            playPauseButton.setImage(UIImage(named: "play"), for: .normal)
+        }
     }
     
     func addSongsToQueue() {
@@ -113,9 +122,9 @@ extension FirstViewController {
         case .stopped:
             print("was stopped, now playing")
             play()
-        case .interrupted:
-            print("was playing, now interrpted")
-            pause()
+//        case .interrupted:
+//            print("was playing, now interrpted")
+//            pause()
         case .paused:
             print("was paused, now playing")
             play()
@@ -149,6 +158,15 @@ extension FirstViewController {
     }
     
     func displayNowPlayingItem() {
+        let albumArtSize = CGSize(width: 256.0, height: 256.0)
+
+        NSLog("\(albumArtSize)")
+        albumArt.image = myMusicPlayer.nowPlayingItem?.artwork?.image(at: albumArtSize)
+        
+        if albumArt.image == nil {
+            albumArt.image = UIImage(named: "Default Album Art")
+        }
+        
         mediaInfo.text = myMusicPlayer.nowPlayingItem?.title
     }
 

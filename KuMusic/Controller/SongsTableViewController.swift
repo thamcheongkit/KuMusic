@@ -64,10 +64,8 @@ class SongsTableViewController: UITableViewController {
         if let nowPlayingItem = myMusicPlayer.musicPlayer.nowPlayingItem,
             let songs = songs,
             songs[indexPath.row] == nowPlayingItem,
-            let image = UIImage(named: "first") {
+            let image = UIImage(named: "playstate") {
             NSLog("found same mediaitem!")
-//            let imageView = UIImageView()
-//            imageView.image = image
             cell.imageView?.image = image
         }
         
