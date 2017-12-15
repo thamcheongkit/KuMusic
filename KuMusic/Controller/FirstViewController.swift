@@ -32,6 +32,10 @@ class FirstViewController: UIViewController {
         addSongsToQueue()
         setupNotifications()
         updatePlayPauseButton()
+//        displayNowPlayingItem()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         displayNowPlayingItem()
     }
 
@@ -46,12 +50,13 @@ class FirstViewController: UIViewController {
 extension FirstViewController {
     
     @objc func nowPlayingChanged(notification: NSNotification) {
-        NSLog("now playing did changed!")
+//        NSLog("now playing did changed!")
         displayNowPlayingItem()
+//        print(myMusicPlayer.indexOfNowPlayingItem)
     }
     
     @objc func playbackStateChanged(notification: NSNotification) {
-        NSLog("playback state changed notification")
+//        NSLog("playback state changed notification")
         repeatLabel.text = String(myMusicPlayer.repeatMode.rawValue)
         shuffleLabel.text = String(myMusicPlayer.shuffleMode.rawValue)
         updatePlayPauseButton()
@@ -83,7 +88,7 @@ extension FirstViewController {
         case .playing:
             return
         default:
-            NSLog("invalidate timer")
+//            NSLog("invalidate timer")
             timer.invalidate()
         }
     }
@@ -160,7 +165,6 @@ extension FirstViewController {
     func displayNowPlayingItem() {
         let albumArtSize = CGSize(width: 256.0, height: 256.0)
 
-        NSLog("\(albumArtSize)")
         albumArt.image = myMusicPlayer.nowPlayingItem?.artwork?.image(at: albumArtSize)
         
         if albumArt.image == nil {

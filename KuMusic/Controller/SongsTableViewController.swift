@@ -15,26 +15,24 @@ class SongsTableViewController: UITableViewController {
     
     var songs: [MPMediaItem]? {
         didSet {
+            found = false
             tableView.reloadData()
         }
     }
+    
+    var lastIndexPath: IndexPath?
+    var previousSong: MPMediaItem?
+    var found = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupNotifications()
-        
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        tableView.reloadData()
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         if songs != nil {
             return 1
         } else {
@@ -43,7 +41,6 @@ class SongsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         if let songs = songs {
             return songs.count
         } else {
@@ -53,7 +50,7 @@ class SongsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-
+        
         if let songs = songs {
             let song = songs[indexPath.row]
             cell.textLabel?.text = song.title
@@ -61,36 +58,65 @@ class SongsTableViewController: UITableViewController {
             cell.imageView?.image = nil
         }
         
-        if let nowPlayingItem = myMusicPlayer.musicPlayer.nowPlayingItem,
-            let songs = songs,
-            songs[indexPath.row] == nowPlayingItem,
-            let image = UIImage(named: "playstate") {
-            NSLog("found same mediaitem!")
-            cell.imageView?.image = image
+        if !found {
+            if let song = myMusicPlayer.musicPlayer.nowPlayingItem,
+                songs?[indexPath.row] == song,
+                let image = UIImage(named: "playstate") {
+                cell.imageView?.image = image
+                found = true
+            }
         }
+        
+//        else {
+//            if let lastIndexPath = lastIndexPath,
+//                lastIndexPath == indexPath,
+//                let image = UIImage(named: "playstate") {
+//                cell.imageView?.image = image
+//            }
+//        }
         
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let selectedMedia = songs?[indexPath.row] {
+        if let selectedMedia = songs?[indexPath.row],
+            previousSong != selectedMedia {
+            
+//            if let lip = lastIndexPath {
+//                if lip != indexPath {
+//                    lastIndexPath = indexPath
+//                    tableView.reloadRows(at: [lip, indexPath], with: UITableViewRowAnimation.none)
+//                } else {
+//                    tableView.deselectRow(at: indexPath, animated: true)
+//                }
+//            } else {
+//                lastIndexPath = indexPath
+//                tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
+//            }
+            
             myMusicPlayer.musicPlayer.setQueue(with: MPMediaItemCollection(items: [selectedMedia]))
             myMusicPlayer.musicPlayer.prepareToPlay()
+        } else {
+            tableView.deselectRow(at: indexPath, animated: true)
         }
+        
     }
-
+    
 }
 
 extension SongsTableViewController {
     
     @objc func nowPlayingChanged(notification: NSNotification) {
-        NSLog("now playing did changed!")
-        tableView.reloadData()
+        if let song = myMusicPlayer.musicPlayer.nowPlayingItem {
+            if previousSong == nil || previousSong != song {
+                found = false
+                tableView.reloadData()
+                previousSong = myMusicPlayer.musicPlayer.nowPlayingItem
+            }
+        }
     }
     
-    @objc func playbackStateChanged(notification: NSNotification) {
-        NSLog("playback state changed notification")
-    }
+    @objc func playbackStateChanged(notification: NSNotification) { }
     
     func setupNotifications() {
         NotificationCenter.default.addObserver(
