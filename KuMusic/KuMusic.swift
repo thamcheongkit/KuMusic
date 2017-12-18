@@ -10,7 +10,7 @@ import Foundation
 import MediaPlayer
 
 class KuMusic {
-    let musicPlayer = MPMusicPlayerController.applicationQueuePlayer
+    let musicPlayer = MPMusicPlayerController.systemMusicPlayer
     
     func addSongsToQueue() {
         // Instantiate a new music player

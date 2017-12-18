@@ -28,6 +28,13 @@ class SongsTableViewController: UITableViewController {
         super.viewDidLoad()
         setupNotifications()
         tableView.reloadData()
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Play all",
+            style: .plain,
+            target: self,
+            action: #selector(playallbuttonclicked)
+        )
     }
 
     // MARK: - Table view data source
@@ -92,7 +99,9 @@ class SongsTableViewController: UITableViewController {
 //            } else {
 //                lastIndexPath = indexPath
 //                tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
-//            }
+//            }-
+            
+//            myMusicPlayer.musicPlayer.setQueue(with: MPMediaItemCollection(items: songs))
             
             myMusicPlayer.musicPlayer.setQueue(with: MPMediaItemCollection(items: [selectedMedia]))
             myMusicPlayer.musicPlayer.prepareToPlay()
@@ -105,6 +114,14 @@ class SongsTableViewController: UITableViewController {
 }
 
 extension SongsTableViewController {
+    
+    @objc func playallbuttonclicked(_ sender: Any?) {
+        if let songs = songs {
+            myMusicPlayer.musicPlayer.setQueue(with: MPMediaItemCollection(items: songs))
+            myMusicPlayer.musicPlayer.prepareToPlay()
+            myMusicPlayer.musicPlayer.play()
+        }
+    }
     
     @objc func nowPlayingChanged(notification: NSNotification) {
         if let song = myMusicPlayer.musicPlayer.nowPlayingItem {
@@ -133,4 +150,5 @@ extension SongsTableViewController {
             object: nil
         )
     }
+    
 }

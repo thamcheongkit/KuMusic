@@ -12,12 +12,16 @@ import MediaPlayer
 class FirstViewController: UIViewController {
     
     let myMusicPlayer = (UIApplication.shared.delegate as! AppDelegate).myMusicPlayer.musicPlayer
-
+    
+    var timer: Timer?
+    
     @IBAction func forwardButton(_ sender: Any) { forward() }
     @IBAction func backwardButton(_ sender: Any) { backward() }
     @IBAction func playPauseButton(_ sender: Any) { playOrPause() }
     @IBAction func shuffleButton(_ sender: Any) { cycleShuffleMode() }
     @IBAction func repeatButton(_ sender: Any) { cycleRepeatMode() }
+    
+    @IBAction func slider(_ sender: UISlider) { drag(sender) }
     
     @IBOutlet weak var mediaInfo: UILabel!
     @IBOutlet weak var shuffleLabel: UILabel!
@@ -28,15 +32,13 @@ class FirstViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        addSongsToQueue()
+        
+//        addSongsToQueue()
         setupNotifications()
         updatePlayPauseButton()
-//        displayNowPlayingItem()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
         displayNowPlayingItem()
+        updateSliderTimer()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -50,16 +52,18 @@ class FirstViewController: UIViewController {
 extension FirstViewController {
     
     @objc func nowPlayingChanged(notification: NSNotification) {
-//        NSLog("now playing did changed!")
+        NSLog("now playing did changed!")
         displayNowPlayingItem()
-//        print(myMusicPlayer.indexOfNowPlayingItem)
     }
     
     @objc func playbackStateChanged(notification: NSNotification) {
-//        NSLog("playback state changed notification")
-        repeatLabel.text = String(myMusicPlayer.repeatMode.rawValue)
-        shuffleLabel.text = String(myMusicPlayer.shuffleMode.rawValue)
+        updateRepeatLabel()
+        updateShuffleLabel()
         updatePlayPauseButton()
+    }
+    
+    func drag(_ sender: UISlider) {
+        myMusicPlayer.currentPlaybackTime = TimeInterval(sender.value)
         updateSliderTimer()
     }
     
@@ -80,31 +84,28 @@ extension FirstViewController {
     }
     
     func updateSliderTimer() {
-        let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in self?.updateSlider() }
-        timer.tolerance = 10.0
-        
-        
-        switch myMusicPlayer.playbackState {
-        case .playing:
-            return
-        default:
-//            NSLog("invalidate timer")
-            timer.invalidate()
+        if let t = timer {
+            t.invalidate()
         }
+        
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in self?.updateSlider() }
     }
     
     func updateSlider() {
-        slider.value = Float(myMusicPlayer.currentPlaybackTime)
-        slider.minimumValue = 0
-        slider.maximumValue = Float((myMusicPlayer.nowPlayingItem?.playbackDuration)!)
+        if let duration = myMusicPlayer.nowPlayingItem?.playbackDuration {
+            slider.value = Float(myMusicPlayer.currentPlaybackTime)
+            slider.minimumValue = 0
+            slider.maximumValue = Float(duration)
+//            print(myMusicPlayer.currentPlaybackTime)
+        }
     }
     
     func updatePlayPauseButton() {
         switch myMusicPlayer.playbackState {
         case .playing:
-            playPauseButton.setImage(UIImage(named: "pause"), for: .normal)
+            playPauseButton.setBackgroundImage(UIImage(named: "pause"), for: .normal)
         default:
-            playPauseButton.setImage(UIImage(named: "play"), for: .normal)
+            playPauseButton.setBackgroundImage(UIImage(named: "play"), for: .normal)
         }
     }
     
@@ -152,14 +153,48 @@ extension FirstViewController {
     
     func cycleRepeatMode() {
         myMusicPlayer.repeatMode = MPMusicRepeatMode(rawValue: myMusicPlayer.repeatMode.rawValue%4+1)!
-        repeatLabel.text = String(myMusicPlayer.repeatMode.rawValue)
-        print(myMusicPlayer.repeatMode)
+        updateRepeatLabel()
+    }
+    
+    func updateRepeatLabel() {
+        //        repeatLabel.text = String(myMusicPlayer.repeatMode.name)
+        
+        switch myMusicPlayer.repeatMode {
+        case .none:
+            repeatLabel.text = "None"
+        case .one:
+            repeatLabel.text = "One"
+        case .all:
+            repeatLabel.text = "All"
+        case .default:
+            repeatLabel.text = "None"
+        }
     }
 
     func cycleShuffleMode() {
-        myMusicPlayer.shuffleMode = MPMusicShuffleMode(rawValue: myMusicPlayer.shuffleMode.rawValue%4+1)!
-        shuffleLabel.text = String(myMusicPlayer.shuffleMode.rawValue)
-        print(myMusicPlayer.shuffleMode)
+//        myMusicPlayer.shuffleMode = MPMusicShuffleMode(rawValue: myMusicPlayer.shuffleMode.rawValue%2+2)!
+        
+        switch myMusicPlayer.shuffleMode {
+        case .off:
+            myMusicPlayer.shuffleMode = .songs
+        case .songs:
+            myMusicPlayer.shuffleMode = .off
+        default:
+            myMusicPlayer.shuffleMode = .songs
+        }
+        
+        updateShuffleLabel()
+    }
+    
+    func updateShuffleLabel() {
+        switch myMusicPlayer.shuffleMode {
+        case .off:
+            shuffleLabel.text = "Off"
+        case .songs:
+            shuffleLabel.text = "On"
+        default:
+            shuffleLabel.text = "Off"
+        }
     }
     
     func displayNowPlayingItem() {
@@ -173,8 +208,21 @@ extension FirstViewController {
         
         mediaInfo.text = myMusicPlayer.nowPlayingItem?.title
         
-        repeatLabel.text = String(myMusicPlayer.repeatMode.rawValue)
-        shuffleLabel.text = String(myMusicPlayer.shuffleMode.rawValue)
+        updateRepeatLabel()
+        updateShuffleLabel()
     }
 
+}
+
+
+extension MPMusicShuffleMode {
+    var name: String {
+        get { return String(describing: self) }
+    }
+}
+
+extension MPMusicRepeatMode {
+    var name: String {
+        get { return String(describing: self) }
+    }
 }
